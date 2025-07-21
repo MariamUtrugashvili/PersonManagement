@@ -61,7 +61,7 @@ namespace PersonManagement.Domain.Entities
 
         public void AddRelatedPerson(int relatedToPersonId, RelationType relationType)
         {
-            var relatedPerson = RelatedPerson.Create(this.Id, relatedToPersonId, relationType);
+            var relatedPerson = RelatedPerson.Create(Id, relatedToPersonId, relationType);
             _relatedPersons.Add(relatedPerson);
             SetUpdated();
         }
