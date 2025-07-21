@@ -12,10 +12,24 @@ namespace PersonManagement.Domain.Entities
         public string Number { get; private set; } = null!;
         public PhoneNumberType PhoneNumberType { get; private set; }
 
-        public PhoneNumber(PhoneNumberType PhoneNumberType, string phoneNumber)
+        protected PhoneNumber() { } // EF
+
+        public PhoneNumber(PhoneNumberType phoneNumberType, string number)
         {
-            PhoneNumberType = PhoneNumberType;
-            Number = phoneNumber;
+            if (string.IsNullOrWhiteSpace(number))
+                throw new ArgumentException("Phone number cannot be empty", nameof(number));
+
+            PhoneNumberType = phoneNumberType;
+            Number = number;
+        }
+
+        public void UpdateNumber(string newNumber)
+        {
+            if (string.IsNullOrWhiteSpace(newNumber))
+                throw new ArgumentException("Phone number cannot be empty", nameof(newNumber));
+
+            Number = newNumber;
+            SetUpdated();
         }
     }
 }
