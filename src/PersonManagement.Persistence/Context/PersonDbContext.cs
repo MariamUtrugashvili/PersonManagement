@@ -13,9 +13,7 @@ namespace PersonManagement.Persistence.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new PersonConfiguration());
-            modelBuilder.ApplyConfiguration(new PhoneNumberConfiguration());
-            modelBuilder.ApplyConfiguration(new RelatedPersonConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PersonDbContext).Assembly);
         }
     }
 }
