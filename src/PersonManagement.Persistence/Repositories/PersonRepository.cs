@@ -11,6 +11,9 @@ namespace PersonManagement.Persistence.Repositories
     {
         private readonly PersonDbContext _context = context;
 
+        #region Person
+
+        #region Reads
         public async Task<Person?> GetByIdAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true)
         {
             IQueryable<Person> query = _context.Persons.AsNoTracking();
@@ -54,7 +57,9 @@ namespace PersonManagement.Persistence.Repositories
                 throw new PersonNotFoundException(id);
             return true;
         }
+        #endregion Reads
 
+        #region Writes
         public async Task AddAsync(Person person, CancellationToken cancellationToken)
         {
             await _context.Persons.AddAsync(person, cancellationToken);
@@ -87,7 +92,11 @@ namespace PersonManagement.Persistence.Repositories
             // Soft delete
             person.MarkAsDeleted();
         }
+        #endregion Writes
 
+        #endregion Person
+
+        #region Related Person
         public async Task AddRelatedPersonAsync(int personId, int relatedToPersonId, RelationType relationType, CancellationToken cancellationToken)
         {
             var person = await _context.Persons
@@ -106,6 +115,12 @@ namespace PersonManagement.Persistence.Repositories
                 ?? throw new PersonNotFoundException(personId);
             
             person.RemoveRelatedPerson(relatedToPersonId);
+        }
+        #endregion Related Person
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

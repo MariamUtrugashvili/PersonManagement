@@ -18,5 +18,7 @@ namespace PersonManagement.Domain.Repositories
         Task AddRelatedPersonAsync(int personId, int relatedToPersonId, RelationType relationType, CancellationToken cancellationToken);
         Task RemoveRelatedPersonAsync(int personId, int relatedToPersonId, CancellationToken cancellationToken);
         #endregion
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
