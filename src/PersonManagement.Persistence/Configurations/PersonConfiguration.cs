@@ -10,6 +10,9 @@ namespace PersonManagement.Persistence.Configurations
         {
             entity.ToTable("Persons");
             entity.HasKey(p => p.Id);
+            entity.HasIndex(p => p.FirstName);
+            entity.HasIndex(p => p.LastName);
+            entity.HasIndex(p => p.PersonalNumber);
             entity.Property(p => p.FirstName).IsRequired().HasMaxLength(50);
             entity.Property(p => p.LastName).IsRequired().HasMaxLength(50);
             entity.Property(p => p.PersonalNumber).IsRequired().HasMaxLength(11);
