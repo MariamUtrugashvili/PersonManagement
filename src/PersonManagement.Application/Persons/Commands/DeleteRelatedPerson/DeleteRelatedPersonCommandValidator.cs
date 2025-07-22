@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
+namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
 {
-    public class AddRelatedPersonCommandValidator : AbstractValidator<AddRelatedPersonCommand>
+    public class DeleteRelatedPersonCommandValidator : AbstractValidator<DeleteRelatedPersonCommand>
     {
-        public AddRelatedPersonCommandValidator()
+        public DeleteRelatedPersonCommandValidator()
         {
             RuleFor(x => x.PersonId)
                 .GreaterThan(0).WithMessage("Invalid person ID.");
@@ -13,8 +13,6 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
                 .GreaterThan(0)
                 .NotEqual(x => x.PersonId).WithMessage("A person cannot be related to themselves");
 
-            RuleFor(x => x.RelationType)
-                .IsInEnum().WithMessage("Invalid relation type");
         }
     }
 }

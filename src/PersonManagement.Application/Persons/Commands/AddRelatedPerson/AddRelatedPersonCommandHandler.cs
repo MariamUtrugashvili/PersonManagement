@@ -17,9 +17,6 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
 
         public async Task<Unit> Handle(AddRelatedPersonCommand request, CancellationToken cancellationToken)
         {
-            if (request.PersonId == request.RelatedToPersonId)
-                throw new RealtionIsInvalidException();
-
             var person = await _personRepository.GetByIdAsync(
                id: request.PersonId,
                cancellationToken: cancellationToken,
