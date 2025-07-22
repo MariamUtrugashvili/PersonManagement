@@ -16,7 +16,7 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
         public async Task<CreatePersonResponse> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
             var exists = await _personRepository.ExistsByPersonalNumberAsync(request.PersonalNumber, cancellationToken);
-            if (!exists)
+            if (exists)
                 throw new PersonAlreadyExistsException(request.PersonalNumber);
 
             var person = Person.Create(
@@ -31,12 +31,6 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
             foreach (var phoneDto in request.PhoneNumbers)
             {
                 person.AddPhoneNumber(phoneDto.PhoneNumberType, phoneDto.Number);
-            }
-
-            // Add related persons
-            foreach (var relatedDto in request.RelatedPersons)
-            {
-                person.AddRelatedPerson(relatedDto.RelatedToPersonId, relatedDto.RelationType);
             }
             
             await _personRepository.AddAsync(person, cancellationToken);

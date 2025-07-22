@@ -7,6 +7,5 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
 {
     public class CreatePersonCommand : PersonCommandBase, IRequest<CreatePersonResponse>
     {
-        public List<RelatedPerson> RelatedPersons { get; set; } = [];
     }
 }
