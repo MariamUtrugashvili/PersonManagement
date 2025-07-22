@@ -11,7 +11,7 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
         public DateTime DateOfBirth { get; init; }
         public string PersonalNumber { get; init; } = null!;
         public Gender Gender { get; init; }
-        public List<PhoneNumber> PhoneNumbers { get; init; } = new();
-        public List<RelatedPerson> RelatedPersons { get; init; } = new();
+        public List<PhoneNumber> PhoneNumbers { get; init; } = [];
+        public List<RelatedPerson> RelatedPersons { get; init; } = [];
     }
 }

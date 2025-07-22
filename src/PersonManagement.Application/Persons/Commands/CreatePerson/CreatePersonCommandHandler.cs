@@ -1,4 +1,5 @@
 using MediatR;
+using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Repositories;
 
@@ -14,6 +15,10 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
 
         public async Task<CreatePersonResponse> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
+            var exists = await _personRepository.ExistsByPersonalNumberAsync(request.PersonalNumber, cancellationToken);
+            if (!exists)
+                throw new PersonAlreadyExists(request.PersonalNumber);
+
             var person = Person.Create(
             request.FirstName,
             request.LastName,
@@ -33,12 +38,11 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
             {
                 person.AddRelatedPerson(relatedDto.RelatedToPersonId, relatedDto.RelationType);
             }
-
             
             await _personRepository.AddAsync(person, cancellationToken);
             await _personRepository.SaveChangesAsync(cancellationToken);
 
-            return new CreatePersonResponse(person.Id);
+            return new CreatePersonResponse { Id = person.Id };
         }
     }
 }
