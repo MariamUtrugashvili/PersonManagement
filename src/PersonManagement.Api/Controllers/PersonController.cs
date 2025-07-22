@@ -53,6 +53,7 @@ namespace PersonManagement.Api.Controllers
         /// <response code="201">Returns the result id of the creation.</response>
         [HttpPost]
         [ProducesResponseType(typeof(CreatePersonResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<ActionResult<CreatePersonResponse>> Create([FromBody] CreatePersonCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
@@ -101,6 +102,8 @@ namespace PersonManagement.Api.Controllers
         /// <response code="204">Returns the result of the addition.</response>
         [HttpPost("related")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> AddRelated([FromBody] AddRelatedPersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);

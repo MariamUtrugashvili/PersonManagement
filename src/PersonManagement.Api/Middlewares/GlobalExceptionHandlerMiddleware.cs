@@ -36,6 +36,18 @@ namespace PersonManagement.Api.Middlewares
                     statusCode = HttpStatusCode.NotFound;
                     message = pnfEx.Message;
                     break;
+                case PersonAlreadyExistsException paeEx:
+                    statusCode = HttpStatusCode.Conflict;
+                    message = paeEx.Message;
+                    break;
+                case RelationAlreadyExistsException raeEx:
+                    statusCode = HttpStatusCode.Conflict;
+                    message = raeEx.Message;
+                    break;
+                case RelationDoesNotExistException rdneEx:
+                    statusCode = HttpStatusCode.NotFound;
+                    message = rdneEx.Message;
+                    break;
             }
 
             context.Response.ContentType = "application/json";

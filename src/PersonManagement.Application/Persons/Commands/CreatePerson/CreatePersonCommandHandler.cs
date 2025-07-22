@@ -17,7 +17,7 @@ namespace PersonManagement.Application.Persons.Commands.CreatePerson
         {
             var exists = await _personRepository.ExistsByPersonalNumberAsync(request.PersonalNumber, cancellationToken);
             if (!exists)
-                throw new PersonAlreadyExists(request.PersonalNumber);
+                throw new PersonAlreadyExistsException(request.PersonalNumber);
 
             var person = Person.Create(
             request.FirstName,
