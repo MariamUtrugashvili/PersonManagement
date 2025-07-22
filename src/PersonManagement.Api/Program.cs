@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using PersonManagement.Api.Middlewares;
 using PersonManagement.Application;
 using PersonManagement.Persistence;
+using PersonManagement.Persistence.Context;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,5 +40,17 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#region Automatic Pending Migrations
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<PersonDbContext>();
+
+    if (dbContext.Database.GetPendingMigrations().Any())
+    {
+        dbContext.Database.Migrate();
+    }
+}
+#endregion
 
 app.Run();
