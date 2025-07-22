@@ -76,12 +76,13 @@ namespace PersonManagement.Domain.Entities
             }
         }
 
-        public void UpdatePersonalInfo(string firstName, string lastName, DateTime dateOfBirth, Gender gender)
+        public void UpdatePersonalInfo(string firstName, string lastName, DateTime dateOfBirth, Gender gender, string personalNumber)
         {
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Gender = gender;
+            PersonalNumber = personalNumber;
             SetUpdated();
         }
     }
