@@ -2,7 +2,6 @@
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
-using PersonManagement.Domain.Exceptions;
 using PersonManagement.Persistence.Context;
 
 namespace PersonManagement.Persistence.Repositories
@@ -16,6 +15,18 @@ namespace PersonManagement.Persistence.Repositories
         #region Reads
         public async Task<Person?> GetByIdAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true)
         {
+            IQueryable<Person> query = _context.Persons;
+
+            if (includePhoneNumbers)
+                query = query.Include(p => p.PhoneNumbers);
+            if (includeRelatedPersons)
+                query = query.Include(p => p.RelatedPersons);
+
+            return await query.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+        }
+
+        public async Task<Person?> GetByIdNoTrackingAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true)
+        {
             IQueryable<Person> query = _context.Persons.AsNoTracking();
 
             if (includePhoneNumbers)
@@ -25,6 +36,7 @@ namespace PersonManagement.Persistence.Repositories
 
             return await query.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
         }
+
         public async Task<IReadOnlyList<Person>> SearchAsync(string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             IQueryable<Person> query = _context.Persons.AsNoTracking().Where(p => !p.IsDeleted);
@@ -50,12 +62,16 @@ namespace PersonManagement.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken)
+        public async Task<bool> ExistsByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var person = await _context.Persons.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
-            if (person == null)
-                throw new PersonNotFoundException(id);
-            return true;
+            var exists = await _context.Persons.AnyAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+            return exists;
+        }
+
+        public async Task<bool> ExistsByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
+        {
+            var exists = await _context.Persons.AnyAsync(p => p.PersonalNumber == personalNumber && !p.IsDeleted, cancellationToken);
+            return exists;
         }
         #endregion Reads
 
@@ -64,59 +80,9 @@ namespace PersonManagement.Persistence.Repositories
         {
             await _context.Persons.AddAsync(person, cancellationToken);
         }
-
-        public async Task UpdateAsync(int id, string firstName, string lastName, Gender gender, string personalNumber, DateTime dateOfBirth, IEnumerable<(PhoneNumberType type, string number)> phoneNumbers, CancellationToken cancellationToken)
-        {
-            var person = await _context.Persons
-                .Include(p => p.PhoneNumbers)
-                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken) 
-                ?? throw new PersonNotFoundException(id);
-
-            person.UpdatePersonalInfo(firstName, lastName, dateOfBirth, gender);
-
-            // Remove all old phone numbers
-            var existingNumbers = person.PhoneNumbers.Select(pn => pn.Number).ToList();
-            foreach (var number in existingNumbers)
-                person.RemovePhoneNumber(number);
-            
-            // Add new phone numbers
-            foreach (var (type, number) in phoneNumbers)
-                person.AddPhoneNumber(type, number);
-        }
-
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
-        {
-            var person = await _context.Persons.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken)
-                ?? throw new PersonNotFoundException(id);
-
-            // Soft delete
-            person.MarkAsDeleted();
-        }
         #endregion Writes
 
         #endregion Person
-
-        #region Related Person
-        public async Task AddRelatedPersonAsync(int personId, int relatedToPersonId, RelationType relationType, CancellationToken cancellationToken)
-        {
-            var person = await _context.Persons
-                .Include(p => p.RelatedPersons)
-                .FirstOrDefaultAsync(p => p.Id == personId && !p.IsDeleted, cancellationToken) 
-                ?? throw new PersonNotFoundException(personId);
-
-            person.AddRelatedPerson(relatedToPersonId, relationType);
-        }
-
-        public async Task RemoveRelatedPersonAsync(int personId, int relatedToPersonId, CancellationToken cancellationToken)
-        {
-            var person = await _context.Persons
-                .Include(p => p.RelatedPersons)
-                .FirstOrDefaultAsync(p => p.Id == personId && !p.IsDeleted, cancellationToken) 
-                ?? throw new PersonNotFoundException(personId);
-            
-            person.RemoveRelatedPerson(relatedToPersonId);
-        }
-        #endregion Related Person
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
