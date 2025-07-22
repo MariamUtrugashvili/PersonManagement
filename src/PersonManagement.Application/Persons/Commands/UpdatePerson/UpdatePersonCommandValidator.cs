@@ -1,9 +1,10 @@
 using FluentValidation;
 using PersonManagement.Application.Persons.Commands.CreatePerson;
+using PersonManagement.Application.Persons.Common;
 
 namespace PersonManagement.Application.Persons.Commands.UpdatePerson
 {
-    public class UpdatePersonCommandValidator : AbstractValidator<UpdatePersonCommand>
+    public class UpdatePersonCommandValidator : PersonCommandValidatorBase<UpdatePersonCommand>
     {
         public UpdatePersonCommandValidator()
         {
