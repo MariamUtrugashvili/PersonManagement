@@ -25,11 +25,6 @@ namespace PersonManagement.Domain.Entities
 
         private Person(string firstName, string lastName, DateTime dateOfBirth, string personalNumber, Gender gender)
         {
-            if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("First name is required.", nameof(firstName));
-            if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentException("Last name is required.", nameof(lastName));
-            if (string.IsNullOrWhiteSpace(personalNumber)) throw new ArgumentException("Personal number is required.", nameof(personalNumber));
-            if (dateOfBirth > DateTime.UtcNow) throw new ArgumentException("Date of birth cannot be in the future.", nameof(dateOfBirth));
-
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
@@ -44,8 +39,9 @@ namespace PersonManagement.Domain.Entities
 
         public void AddPhoneNumber(PhoneNumberType type, string number)
         {
-            var phone = new PhoneNumber(type, number);
+            var phone = PhoneNumber.Create(type, number);
             _phoneNumbers.Add(phone);
+
             SetUpdated();
         }
 
@@ -54,7 +50,9 @@ namespace PersonManagement.Domain.Entities
             var phone = _phoneNumbers.FirstOrDefault(p => p.Number == number);
             if (phone != null)
             {
+                phone.MarkAsDeleted();
                 _phoneNumbers.Remove(phone);
+
                 SetUpdated();
             }
         }
@@ -71,7 +69,9 @@ namespace PersonManagement.Domain.Entities
             var relatedPerson = _relatedPersons.FirstOrDefault(rp => rp.RelatedToPersonId == relatedToPersonId);
             if (relatedPerson != null)
             {
+                relatedPerson.MarkAsDeleted();
                 _relatedPersons.Remove(relatedPerson);
+
                 SetUpdated();
             }
         }

@@ -1,9 +1,4 @@
 ﻿using PersonManagement.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonManagement.Domain.Entities
 {
@@ -14,13 +9,18 @@ namespace PersonManagement.Domain.Entities
 
         protected PhoneNumber() { } // EF
 
-        public PhoneNumber(PhoneNumberType phoneNumberType, string number)
+        private PhoneNumber(PhoneNumberType phoneNumberType, string number)
         {
             if (string.IsNullOrWhiteSpace(number))
                 throw new ArgumentException("Phone number cannot be empty", nameof(number));
 
             PhoneNumberType = phoneNumberType;
             Number = number;
+        }
+
+        public static PhoneNumber Create(PhoneNumberType phoneNumberType, string number)
+        {
+            return new PhoneNumber(phoneNumberType, number);
         }
 
         public void UpdateNumber(string newNumber)
