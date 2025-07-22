@@ -16,13 +16,13 @@ namespace PersonManagement.Application.Persons.Common
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .Length(2, 50)
-                .Must(BeOnlyLatinOrGeorgian)
+                .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
                 .WithMessage("First name must contain only Latin or Georgian letters.");
 
             RuleFor(x => x.LastName)
                 .NotEmpty()
                 .Length(2, 50)
-                .Must(BeOnlyLatinOrGeorgian)
+                .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
                 .WithMessage("Last name must contain only Latin or Georgian letters.");
 
             RuleFor(x => x.Gender)
@@ -33,7 +33,7 @@ namespace PersonManagement.Application.Persons.Common
                 .Matches(@"^\d{11}$");
 
             RuleFor(x => x.DateOfBirth)
-                .Must(BeAtLeast18YearsOld)
+                .Must(PersonValidationExtensions.BeAtLeast18YearsOld)
                 .WithMessage("Person must be at least 18 years old.");
 
             RuleForEach(x => x.PhoneNumbers).ChildRules(phone =>
@@ -42,20 +42,5 @@ namespace PersonManagement.Application.Persons.Common
                 phone.RuleFor(p => p.Number).Length(4, 50);
             });
         }
-
-        private bool BeOnlyLatinOrGeorgian(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name)) return false;
-
-            var isLatin = Regex.IsMatch(name, @"^[a-zA-Z]+$");
-            var isGeorgian = Regex.IsMatch(name, @"^[ა-ჰ]+$");
-            return isLatin ^ isGeorgian;
-        }
-
-        private bool BeAtLeast18YearsOld(DateTime dob)
-        {
-            return dob <= DateTime.Today.AddYears(-18);
-        }
     }
-
 }
