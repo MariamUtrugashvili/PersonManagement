@@ -1,6 +1,6 @@
 using PersonManagement.Api.Middlewares;
 using PersonManagement.Application;
-using PersonManagement.Application.Persons.Commands.CreatePerson;
+using PersonManagement.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
+builder.Services.AddPersistenceServices(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

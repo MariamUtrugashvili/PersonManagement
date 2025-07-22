@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersonManagement.Application\PersonManagement.Application.csproj" />
+    <ProjectReference Include="..\PersonManagement.Persistence\PersonManagement.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
