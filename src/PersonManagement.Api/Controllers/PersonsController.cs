@@ -12,7 +12,7 @@ namespace PersonManagement.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PersonController(ISender mediator) : ControllerBase
+    public class PersonsController(ISender mediator) : ControllerBase
     {
         private readonly ISender _mediator = mediator;
 

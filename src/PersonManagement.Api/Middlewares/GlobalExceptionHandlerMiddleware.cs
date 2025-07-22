@@ -1,5 +1,6 @@
 ﻿using PersonManagement.Application.Exceptions;
 using System.Net;
+using System.Text.Json;
 
 namespace PersonManagement.Api.Middlewares
 {
@@ -53,7 +54,8 @@ namespace PersonManagement.Api.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;
 
-            return context.Response.WriteAsync(message);
+            var jsonMessage = JsonSerializer.Serialize(message);
+            return context.Response.WriteAsync(jsonMessage);
         }
     }
 }

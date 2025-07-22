@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PersonManagement.Application.Persons.Commands.CreatePerson;
+using System.Reflection;
 
 namespace PersonManagement.Application
 {
@@ -9,6 +10,9 @@ namespace PersonManagement.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<CreatePersonCommandValidator>();
+
+            services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
             return services;
         }
