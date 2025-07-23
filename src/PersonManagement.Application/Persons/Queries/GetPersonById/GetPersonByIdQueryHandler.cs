@@ -19,7 +19,7 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
             var person = await _personRepository.GetByIdNoTrackingAsync(
                 id: request.Id,
                 cancellationToken: cancellationToken,
-                includeRelatedPersons: false,
+                includeRelatedPersons: true,
                 includePhoneNumbers: true) ?? throw new PersonNotFoundException(request.Id);
 
             return new GetPersonByIdResponse
@@ -36,7 +36,25 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
                             Id = p.Id,
                             Number = p.Number,
                             PhoneNumberType = p.PhoneNumberType
-                        }).ToList()
+                        }).ToList(),
+                        RelatedPersons = person.RelatedPersons
+                            .Select(rp => new RelatedPersonResponse
+                            {
+                                Id = rp.RelatedToPerson.Id,
+                                FirstName = rp.RelatedToPerson.FirstName,
+                                LastName = rp.RelatedToPerson.LastName,
+                                DateOfBirth = rp.RelatedToPerson.DateOfBirth,
+                                Gender = rp.RelatedToPerson.Gender,
+                                PersonalNumber = rp.RelatedToPerson.PersonalNumber,
+                                PhoneNumbers = rp.RelatedToPerson.PhoneNumbers
+                                                .Select(pn => new PhoneNumberResponse
+                                                {
+                                                    Id = pn.Id,
+                                                    Number = pn.Number,
+                                                    PhoneNumberType = pn.PhoneNumberType
+                                                }).ToList()
+                            }).ToList()
+
             };
         }
     }
