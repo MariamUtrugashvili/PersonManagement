@@ -12,6 +12,9 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
     {
         private readonly IPersonRepository _personRepository;
         private readonly ICacheService _cacheService;
+
+        private const int cacheExpiryInMinutes = 10;
+
         public GetPersonByIdQueryHandler(IPersonRepository personRepository, ICacheService cacheService)
         {
             _personRepository = personRepository;
@@ -47,26 +50,26 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
                             Number = p.Number,
                             PhoneNumberType = p.PhoneNumberType
                         }).ToList(),
-                        RelatedPersons = person.RelatedPersons
-                            .Select(rp => new RelatedPersonResponse
-                            {
-                                Id = rp.RelatedToPerson.Id,
-                                FirstName = rp.RelatedToPerson.FirstName,
-                                LastName = rp.RelatedToPerson.LastName,
-                                DateOfBirth = rp.RelatedToPerson.DateOfBirth,
-                                Gender = rp.RelatedToPerson.Gender,
-                                PersonalNumber = rp.RelatedToPerson.PersonalNumber,
-                                PhoneNumbers = rp.RelatedToPerson.PhoneNumbers
-                                                .Select(pn => new PhoneNumberResponse
-                                                {
-                                                    Id = pn.Id,
-                                                    Number = pn.Number,
-                                                    PhoneNumberType = pn.PhoneNumberType
-                                                }).ToList()
-                            }).ToList()
+                RelatedPersons = person.RelatedPersons
+                    .Select(rp => new RelatedPersonResponse
+                    {
+                        Id = rp.RelatedToPerson.Id,
+                        FirstName = rp.RelatedToPerson.FirstName,
+                        LastName = rp.RelatedToPerson.LastName,
+                        DateOfBirth = rp.RelatedToPerson.DateOfBirth,
+                        Gender = rp.RelatedToPerson.Gender,
+                        PersonalNumber = rp.RelatedToPerson.PersonalNumber,
+                        PhoneNumbers = rp.RelatedToPerson.PhoneNumbers
+                                        .Select(pn => new PhoneNumberResponse
+                                        {
+                                            Id = pn.Id,
+                                            Number = pn.Number,
+                                            PhoneNumberType = pn.PhoneNumberType
+                                        }).ToList()
+                    }).ToList()
             };
-
-            await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(10));
+            
+            await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(cacheExpiryInMinutes));
             return response;
         }
     }
