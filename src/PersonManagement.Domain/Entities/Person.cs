@@ -51,8 +51,7 @@ namespace PersonManagement.Domain.Entities
             if (phone != null)
             {
                 phone.MarkAsDeleted();
-                _phoneNumbers.Remove(phone);
-
+              
                 SetUpdated();
             }
         }
@@ -70,8 +69,6 @@ namespace PersonManagement.Domain.Entities
             if (relatedPerson != null)
             {
                 relatedPerson.MarkAsDeleted();
-                _relatedPersons.Remove(relatedPerson);
-
                 SetUpdated();
             }
         }

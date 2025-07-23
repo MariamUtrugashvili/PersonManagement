@@ -13,6 +13,10 @@ namespace PersonManagement.Domain.Entities
         public int RelatedToPersonId { get; private set; }
         public RelationType RelationType { get; private set; }
 
+        // Navigation Property
+        public Person Person { get; private set; } = null!;
+        public Person RelatedToPerson { get; private set; } = null!;
+
         protected RelatedPerson() { } // EF Core
 
         private RelatedPerson(int personId, int relatedToPersonId, RelationType relationType)
