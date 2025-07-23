@@ -8,7 +8,9 @@ using PersonManagement.Application.Persons.Commands.DeleteRelatedPerson;
 using PersonManagement.Application.Persons.Queries.GetPersonById;
 using PersonManagement.Application.Persons.Queries.SearchPersons;
 using Swashbuckle.AspNetCore.Filters;
-using PersonManagement.Api.Examples;
+using PersonManagement.Api.Examples.Requests;
+using PersonManagement.Api.Examples.Responses;
+using PersonManagement.Api.Examples.Responses.ErrorResponses;
 
 namespace PersonManagement.Api.Controllers
 {
@@ -24,10 +26,12 @@ namespace PersonManagement.Api.Controllers
         /// <param name="id">The unique identifier of the person.</param>
         /// <returns>The person details.</returns>
         /// <response code="200">Returns the person details.</response>
+        /// <response code="404">Person not found.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GetPersonByIdResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetPersonByIdResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(NotFoundErrorResponseExample))]
         public async Task<ActionResult<GetPersonByIdResponse>> GetById([FromRoute] GetPersonByIdQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
@@ -55,10 +59,12 @@ namespace PersonManagement.Api.Controllers
         /// <param name="command">The person creation data.</param>
         /// <returns>The result of the creation.</returns>
         /// <response code="201">Returns the result id of the creation.</response>
+        /// <response code="409">Person already exists.</response>
         [HttpPost]
         [ProducesResponseType(typeof(CreatePersonResponse), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [SwaggerRequestExample(typeof(CreatePersonCommand), typeof(CreatePersonCommandExample))]
+        [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(AlreadyExistsErrorResponseExample))]
         public async Task<ActionResult<CreatePersonResponse>> Create([FromBody] CreatePersonCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
@@ -74,10 +80,12 @@ namespace PersonManagement.Api.Controllers
         /// <param name="command">The person update data.</param>
         /// <returns>The result of the update.</returns>
         /// <response code="204">Returns the result of the update.</response>
+        /// <response code="404">Person not found.</response>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [SwaggerRequestExample(typeof(UpdatePersonCommand), typeof(UpdatePersonCommandExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(NotFoundErrorResponseExample))]
         public async Task<IActionResult> Update([FromBody] UpdatePersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
@@ -90,9 +98,12 @@ namespace PersonManagement.Api.Controllers
         /// <param name="id">The unique identifier of the person.</param>
         /// <returns>The result of the deletion.</returns>
         /// <response code="204">Returns the result of the deletion.</response>
+        /// <response code="404">Person not found.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [SwaggerRequestExample(typeof(DeletePersonCommand), typeof(DeletePersonCommandExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(NotFoundErrorResponseExample))]
         public async Task<IActionResult> Delete(DeletePersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
@@ -105,11 +116,15 @@ namespace PersonManagement.Api.Controllers
         /// <param name="command">The related person data.</param>
         /// <returns>The result of the addition.</returns>
         /// <response code="204">Returns the result of the addition.</response>
+        /// <response code="404">Person not found.</response>
+        /// <response code="409">Conflict in adding related person.</response>
         [HttpPost("related")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
         [SwaggerRequestExample(typeof(AddRelatedPersonCommand), typeof(AddRelatedPersonCommandExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(NotFoundErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status409Conflict, typeof(AlreadyExistsErrorResponseExample))]
         public async Task<IActionResult> AddRelated([FromBody] AddRelatedPersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
@@ -122,10 +137,12 @@ namespace PersonManagement.Api.Controllers
         /// <param name="command">The related person deletion data.</param>
         /// <returns>The result of the deletion.</returns>
         /// <response code="204">Returns the result of the deletion.</response>
+        /// <response code="404">Person not found.</response>
         [HttpDelete("related")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [SwaggerRequestExample(typeof(DeleteRelatedPersonCommand), typeof(DeleteRelatedPersonCommandExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(NotFoundErrorResponseExample))]
         public async Task<IActionResult> DeleteRelated([FromBody] DeleteRelatedPersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);

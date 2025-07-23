@@ -1,13 +1,16 @@
-﻿using PersonManagement.Application.Exceptions;
+﻿using PersonManagement.Api.Examples.Responses.ErrorResponses;
+using PersonManagement.Application.Exceptions;
 using System.Net;
 using System.Text.Json;
 
 namespace PersonManagement.Api.Middlewares
 {
     public class GlobalExceptionHandlerMiddleware(
-        RequestDelegate next,
-        ILogger<GlobalExceptionHandlerMiddleware> logger)
+            RequestDelegate next,
+            ILogger<GlobalExceptionHandlerMiddleware> logger)
     {
+        private static readonly JsonSerializerOptions _camelCaseJsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
         private readonly RequestDelegate _next = next;
         private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger = logger;
 
@@ -54,7 +57,10 @@ namespace PersonManagement.Api.Middlewares
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;
 
-            var jsonMessage = JsonSerializer.Serialize(message);
+            var jsonMessage = JsonSerializer.Serialize(
+                new ErrorResponse { ErrorMessage = message },
+                _camelCaseJsonOptions);
+
             return context.Response.WriteAsync(jsonMessage);
         }
     }
