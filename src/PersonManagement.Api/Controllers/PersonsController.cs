@@ -7,6 +7,8 @@ using PersonManagement.Application.Persons.Commands.AddRelatedPerson;
 using PersonManagement.Application.Persons.Commands.DeleteRelatedPerson;
 using PersonManagement.Application.Persons.Queries.GetPersonById;
 using PersonManagement.Application.Persons.Queries.SearchPersons;
+using Swashbuckle.AspNetCore.Filters;
+using PersonManagement.Api.Examples;
 
 namespace PersonManagement.Api.Controllers
 {
@@ -25,6 +27,7 @@ namespace PersonManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GetPersonByIdResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetPersonByIdResponseExample))]
         public async Task<ActionResult<GetPersonByIdResponse>> GetById([FromRoute] GetPersonByIdQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
@@ -38,10 +41,11 @@ namespace PersonManagement.Api.Controllers
         /// <response code="200">Returns the list of persons.</response>
         [HttpGet]
         [ProducesResponseType(typeof(SearchPersonsResponse), StatusCodes.Status200OK)]
+        [SwaggerRequestExample(typeof(SearchPersonsQuery), typeof(SearchPersonsQueryExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(SearchPersonsResponseExample))]
         public async Task<ActionResult<SearchPersonsResponse>> Search([FromQuery] SearchPersonsQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
-          
             return Ok(result);
         }
 
@@ -54,14 +58,14 @@ namespace PersonManagement.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(CreatePersonResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [SwaggerRequestExample(typeof(CreatePersonCommand), typeof(CreatePersonCommandExample))]
         public async Task<ActionResult<CreatePersonResponse>> Create([FromBody] CreatePersonCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
-
             return CreatedAtAction(
-            nameof(GetById),
-            new { result.Id },
-            result);
+                nameof(GetById),
+                new { result.Id },
+                result);
         }
 
         /// <summary>
@@ -73,6 +77,7 @@ namespace PersonManagement.Api.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerRequestExample(typeof(UpdatePersonCommand), typeof(UpdatePersonCommandExample))]
         public async Task<IActionResult> Update([FromBody] UpdatePersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
@@ -104,6 +109,7 @@ namespace PersonManagement.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [SwaggerRequestExample(typeof(AddRelatedPersonCommand), typeof(AddRelatedPersonCommandExample))]
         public async Task<IActionResult> AddRelated([FromBody] AddRelatedPersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);
@@ -119,6 +125,7 @@ namespace PersonManagement.Api.Controllers
         [HttpDelete("related")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerRequestExample(typeof(DeleteRelatedPersonCommand), typeof(DeleteRelatedPersonCommandExample))]
         public async Task<IActionResult> DeleteRelated([FromBody] DeleteRelatedPersonCommand command, CancellationToken cancellationToken)
         {
             await _mediator.Send(command, cancellationToken);

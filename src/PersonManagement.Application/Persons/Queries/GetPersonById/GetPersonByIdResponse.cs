@@ -2,6 +2,9 @@ using PersonManagement.Domain.Enums;
 
 namespace PersonManagement.Application.Persons.Queries.GetPersonById
 {
+    /// <summary>
+    /// Response with person details.
+    /// </summary>
     public class GetPersonByIdResponse
     {
         public int Id { get; set; }

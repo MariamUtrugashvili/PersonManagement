@@ -2,6 +2,9 @@ using PersonManagement.Domain.Enums;
 
 namespace PersonManagement.Application.Persons.Queries.SearchPersons
 {
+    /// <summary>
+    /// Response with paginated list of persons.
+    /// </summary>
     public class SearchPersonsResponse
     {
         public int TotalCount { get; set; }

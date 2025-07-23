@@ -5,6 +5,7 @@ using PersonManagement.Persistence;
 using PersonManagement.Persistence.Context;
 using Serilog;
 using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.UseInlineDefinitionsForEnums();
+    options.ExampleFilters();
 });
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
 

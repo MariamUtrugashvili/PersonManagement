@@ -2,6 +2,9 @@ using MediatR;
 
 namespace PersonManagement.Application.Persons.Queries.SearchPersons
 {
+    /// <summary>
+    /// Request to search for persons.
+    /// </summary>
     public class SearchPersonsQuery : IRequest<SearchPersonsResponse>
     {
         public string? FirstName { get; set; }
