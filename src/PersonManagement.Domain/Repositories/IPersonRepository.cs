@@ -8,7 +8,7 @@ namespace PersonManagement.Domain.Repositories
         #region Person
         Task<Person?> GetByIdAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true);
         Task<Person?> GetByIdNoTrackingAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true);
-        Task<IReadOnlyList<Person>> SearchAsync(string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Person>> SearchAsync(string? q, string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken);
         Task<bool> ExistsByIdAsync(int id, CancellationToken cancellationToken);
         Task<bool> ExistsByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken);
 

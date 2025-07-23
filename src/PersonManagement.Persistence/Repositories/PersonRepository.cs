@@ -40,7 +40,7 @@ namespace PersonManagement.Persistence.Repositories
             return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
-        public async Task<IReadOnlyList<Person>> SearchAsync(string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<Person>> SearchAsync(string? q, string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             IQueryable<Person> query = _context.Persons.AsNoTracking();
 
@@ -57,6 +57,14 @@ namespace PersonManagement.Persistence.Repositories
             if (!string.IsNullOrWhiteSpace(personalNumber))
             {
                 query = query.Where(p => p.PersonalNumber.Contains(personalNumber));
+            }
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                query = query.Where(p =>
+                    p.FirstName.Contains(q) ||
+                    p.LastName.Contains(q) ||
+                    p.PersonalNumber.Contains(q));
             }
 
             return await query

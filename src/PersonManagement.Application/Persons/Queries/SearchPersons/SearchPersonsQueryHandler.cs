@@ -14,7 +14,7 @@ namespace PersonManagement.Application.Persons.Queries.SearchPersons
         public async Task<SearchPersonsResponse> Handle(SearchPersonsQuery request, CancellationToken cancellationToken)
         {
             var persons = await _personRepository.SearchAsync(
-                request.FirstName, request.LastName, request.PersonalNumber, request.PageNumber, request.PageSize, cancellationToken);
+                request.Q, request.FirstName, request.LastName, request.PersonalNumber, request.PageNumber, request.PageSize, cancellationToken);
 
             return new SearchPersonsResponse
             {
