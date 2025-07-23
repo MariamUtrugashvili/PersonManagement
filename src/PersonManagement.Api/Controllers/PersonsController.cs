@@ -25,9 +25,9 @@ namespace PersonManagement.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GetPersonByIdResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetPersonByIdResponse>> GetById(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetPersonByIdResponse>> GetById([FromRoute] GetPersonByIdQuery query, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetPersonByIdQuery { Id = id }, cancellationToken);
+            var result = await _mediator.Send(query, cancellationToken);
             return Ok(result);
         }
 
@@ -88,9 +88,9 @@ namespace PersonManagement.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(DeletePersonCommand command, CancellationToken cancellationToken)
         {
-            await _mediator.Send(new DeletePersonCommand { Id = id }, cancellationToken);
+            await _mediator.Send(command, cancellationToken);
             return NoContent();
         }
 
