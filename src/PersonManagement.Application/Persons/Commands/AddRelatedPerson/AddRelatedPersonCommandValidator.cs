@@ -12,10 +12,10 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
 
             RuleFor(x => x.RelatedToPersonId)
                 .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId)
-                .NotEqual(x => x.PersonId).WithMessage("A person cannot be related to themselves");
+                .NotEqual(x => x.PersonId).WithMessage(ValidationConstants.CannotRelateToSelf);
 
             RuleFor(x => x.RelationType)
-                .IsInEnum().WithMessage("Invalid relation type");
+                .IsInEnum().WithMessage(ValidationConstants.InvalidRelationType);
         }
     }
 }

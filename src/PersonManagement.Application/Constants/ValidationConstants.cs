@@ -15,5 +15,9 @@
         public const string PhoneNumberTypeInvalid = "Phone number type is invalid.";
         public const string PhoneNumberLength = "Phone number must be between 4 and 50 characters.";
         public const string InvalidPersonId = "Invalid person ID.";
+        public const string CannotRelateToSelf = "A person cannot be related to themselves";
+        public const string InvalidRelationType = "Invalid relation type";
+        public const string PageNumberGreaterThanZero = "Page number must be greater than 0.";
+        public const string PageSizeRange = "Page size must be between 1 and 100.";
     }
 }

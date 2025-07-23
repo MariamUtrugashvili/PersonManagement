@@ -11,9 +11,8 @@ namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
                 .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId);
 
             RuleFor(x => x.RelatedToPersonId)
-                .GreaterThan(0)
-                .NotEqual(x => x.PersonId).WithMessage("A person cannot be related to themselves");
-
+                .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId)
+                .NotEqual(x => x.PersonId).WithMessage(ValidationConstants.CannotRelateToSelf);
         }
     }
 }

@@ -10,11 +10,11 @@ namespace PersonManagement.Application.Persons.Queries.SearchPersons
         {
             RuleFor(x => x.PageNumber)
                 .GreaterThan(0)
-                .WithMessage("Page number must be greater than 0.");
+                .WithMessage(ValidationConstants.PageNumberGreaterThanZero);
 
             RuleFor(x => x.PageSize)
                 .InclusiveBetween(1, 100)
-                .WithMessage("Page size must be between 1 and 100.");
+                .WithMessage(ValidationConstants.PageSizeRange);
 
             RuleFor(x => x.FirstName)
             .Length(2, 50)
