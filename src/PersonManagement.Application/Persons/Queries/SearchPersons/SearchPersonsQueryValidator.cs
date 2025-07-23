@@ -16,17 +16,23 @@ namespace PersonManagement.Application.Persons.Queries.SearchPersons
                 .WithMessage("Page size must be between 1 and 100.");
 
             RuleFor(x => x.FirstName)
-                .Length(2, 50)
-                .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
-                .WithMessage("First name must contain only Latin or Georgian letters.");
+            .Length(2, 50)
+            .WithMessage("First name must be between 2 and 50 characters.")
+            .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
+            .WithMessage("First name must contain only Latin or Georgian letters.")
+            .When(x => !string.IsNullOrWhiteSpace(x.FirstName));
 
             RuleFor(x => x.LastName)
                 .Length(2, 50)
+                .WithMessage("Last name must be between 2 and 50 characters.")
                 .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
-                .WithMessage("Last name must contain only Latin or Georgian letters.");
+                .WithMessage("Last name must contain only Latin or Georgian letters.")
+                .When(x => !string.IsNullOrWhiteSpace(x.LastName));
 
             RuleFor(x => x.PersonalNumber)
-                .Matches(@"^\d{11}$");
+                .Matches(@"^\d{11}$")
+                .WithMessage("Personal number must be exactly 11 digits.")
+                .When(x => !string.IsNullOrWhiteSpace(x.PersonalNumber));
         }
     }
 }
