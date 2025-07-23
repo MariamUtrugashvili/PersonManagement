@@ -3,9 +3,21 @@ using PersonManagement.Api.Middlewares;
 using PersonManagement.Application;
 using PersonManagement.Persistence;
 using PersonManagement.Persistence.Context;
+using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region Serilog
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+#endregion
+
 
 // Add services to the container.
 
@@ -53,4 +65,16 @@ using (var scope = app.Services.CreateScope())
 }
 #endregion
 
-app.Run();
+try
+{
+    Log.Information("Starting...");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Terminated");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
