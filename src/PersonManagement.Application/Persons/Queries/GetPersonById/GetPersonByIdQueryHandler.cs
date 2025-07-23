@@ -1,7 +1,8 @@
 using MediatR;
+using PersonManagement.Application.Caching;
+using PersonManagement.Application.Constants;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Repositories;
-using PersonManagement.Application.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
 
         public async Task<GetPersonByIdResponse> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"person:{request.Id}";
+            var cacheKey = CacheConstants.GetPersonCacheKey(request.Id);
+
             var cachedResult = await _cacheService.GetAsync<GetPersonByIdResponse>(cacheKey);
             if (cachedResult != null)
                 return cachedResult;

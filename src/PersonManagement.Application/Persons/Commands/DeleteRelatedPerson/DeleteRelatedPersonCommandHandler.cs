@@ -1,8 +1,9 @@
 using MediatR;
+using PersonManagement.Application.Caching;
+using PersonManagement.Application.Constants;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
-using PersonManagement.Application.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
 
             await _personRepository.SaveChangesAsync(cancellationToken);
 
-            await _cacheService.RemoveAsync($"person:{request.PersonId}");
+            await _cacheService.RemoveAsync(CacheConstants.GetPersonCacheKey(request.PersonId));
 
             return Unit.Value;
         }

@@ -2,6 +2,7 @@ using MediatR;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Repositories;
 using PersonManagement.Application.Caching;
+using PersonManagement.Application.Constants;
 
 namespace PersonManagement.Application.Persons.Commands.DeletePerson
 {
@@ -32,7 +33,7 @@ namespace PersonManagement.Application.Persons.Commands.DeletePerson
 
             await _personRepository.SaveChangesAsync(cancellationToken);
    
-            await _cacheService.RemoveAsync($"person:{request.Id}");
+            await _cacheService.RemoveAsync(CacheConstants.GetPersonCacheKey(request.Id));
 
             return Unit.Value;
         }
