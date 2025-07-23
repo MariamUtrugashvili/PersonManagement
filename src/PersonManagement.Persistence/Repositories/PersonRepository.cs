@@ -22,7 +22,7 @@ namespace PersonManagement.Persistence.Repositories
             if (includeRelatedPersons)
                 query = query.Include(p => p.RelatedPersons);
 
-            return await query.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+            return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task<Person?> GetByIdNoTrackingAsync(int id, CancellationToken cancellationToken, bool includePhoneNumbers = true, bool includeRelatedPersons = true)
@@ -32,14 +32,17 @@ namespace PersonManagement.Persistence.Repositories
             if (includePhoneNumbers)
                 query = query.Include(p => p.PhoneNumbers);
             if (includeRelatedPersons)
-                query = query.Include(p => p.RelatedPersons);
+                query = query.Include(p => p.RelatedPersons)
+                         .ThenInclude(rp => rp.RelatedToPerson)
+                         .ThenInclude(rtp => rtp.PhoneNumbers);
 
-            return await query.FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+
+            return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task<IReadOnlyList<Person>> SearchAsync(string? firstName, string? lastName, string? personalNumber, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            IQueryable<Person> query = _context.Persons.AsNoTracking().Where(p => !p.IsDeleted);
+            IQueryable<Person> query = _context.Persons.AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(firstName))
             {
@@ -64,13 +67,13 @@ namespace PersonManagement.Persistence.Repositories
 
         public async Task<bool> ExistsByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var exists = await _context.Persons.AnyAsync(p => p.Id == id && !p.IsDeleted, cancellationToken);
+            var exists = await _context.Persons.AnyAsync(p => p.Id == id, cancellationToken);
             return exists;
         }
 
         public async Task<bool> ExistsByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
         {
-            var exists = await _context.Persons.AnyAsync(p => p.PersonalNumber == personalNumber && !p.IsDeleted, cancellationToken);
+            var exists = await _context.Persons.AnyAsync(p => p.PersonalNumber == personalNumber, cancellationToken);
             return exists;
         }
         #endregion Reads
