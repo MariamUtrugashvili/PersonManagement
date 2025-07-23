@@ -11,6 +11,18 @@ namespace PersonManagement.Persistence.Configurations
             entity.ToTable("RelatedPersons");
             entity.HasKey(rp => rp.Id);
             entity.Property(rp => rp.RelationType).IsRequired();
+            entity.HasQueryFilter(p => !p.IsDeleted);
+
+            entity.HasOne(rp => rp.Person)
+              .WithMany(p => p.RelatedPersons)
+              .HasForeignKey(rp => rp.PersonId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(rp => rp.RelatedToPerson)
+                .WithMany()
+                .HasForeignKey(rp => rp.RelatedToPersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

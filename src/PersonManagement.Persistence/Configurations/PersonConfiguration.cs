@@ -20,7 +20,8 @@ namespace PersonManagement.Persistence.Configurations
             entity.Property(p => p.DateOfBirth).IsRequired();
             entity.Property(p => p.IsDeleted).HasDefaultValue(false);
             entity.HasMany(p => p.PhoneNumbers).WithOne().HasForeignKey("PersonId").OnDelete(DeleteBehavior.Cascade);
-            entity.HasMany(p => p.RelatedPersons).WithOne().HasForeignKey("PersonId").OnDelete(DeleteBehavior.Cascade);
+            entity.HasMany(p => p.RelatedPersons).WithOne().HasForeignKey("PersonId").OnDelete(DeleteBehavior.Restrict);
+            entity.HasQueryFilter(p => !p.IsDeleted);
         }
     }
 }

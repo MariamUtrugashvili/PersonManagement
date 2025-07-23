@@ -12,6 +12,7 @@ namespace PersonManagement.Persistence.Configurations
             entity.HasKey(p => p.Id);
             entity.Property(p => p.Number).IsRequired().HasMaxLength(50);
             entity.Property(p => p.PhoneNumberType).IsRequired();
+            entity.HasQueryFilter(p => !p.IsDeleted);
         }
     }
 }
