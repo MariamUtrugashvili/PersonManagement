@@ -32,12 +32,23 @@ builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
+
+#region Swagger
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.UseInlineDefinitionsForEnums();
     options.ExampleFilters();
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Person Management API",
+        Version = "v1",
+        Description = "API for managing persons, their relationships, and related data."
+    });
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
+
+#endregion
 
 var app = builder.Build();
 
