@@ -5,10 +5,6 @@ using PersonManagement.Application.Caching;
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
-using Xunit;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using PersonManagement.Application.Constants;
 using MediatR;
 

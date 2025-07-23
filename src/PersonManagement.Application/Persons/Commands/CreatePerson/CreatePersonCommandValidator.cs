@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using PersonManagement.Application.Persons.Common;
-using System.Text.RegularExpressions;
+﻿using PersonManagement.Application.Persons.Common;
 
 namespace PersonManagement.Application.Persons.Commands.CreatePerson
 {

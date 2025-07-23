@@ -1,5 +1,4 @@
 ﻿using PersonManagement.Domain.Entities;
-using PersonManagement.Domain.Enums;
 
 namespace PersonManagement.Domain.Repositories
 {

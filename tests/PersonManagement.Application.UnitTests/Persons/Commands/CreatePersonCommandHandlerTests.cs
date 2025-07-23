@@ -1,14 +1,9 @@
 using Moq;
 using PersonManagement.Application.Persons.Commands.CreatePerson;
 using PersonManagement.Application.Exceptions;
-using PersonManagement.Application.Caching;
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
-using Xunit;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace PersonManagement.Application.UnitTests.Persons.Commands
 {

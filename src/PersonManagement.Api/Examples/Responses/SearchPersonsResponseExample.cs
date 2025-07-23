@@ -1,7 +1,6 @@
 using Swashbuckle.AspNetCore.Filters;
 using PersonManagement.Application.Persons.Queries.SearchPersons;
 using PersonManagement.Domain.Enums;
-using System.Collections.Generic;
 
 namespace PersonManagement.Api.Examples.Responses
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonManagement.Domain.Entities;
-using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
 using PersonManagement.Persistence.Context;
 

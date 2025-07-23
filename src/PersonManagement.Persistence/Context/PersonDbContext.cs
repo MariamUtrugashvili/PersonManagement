@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonManagement.Domain.Entities;
-using PersonManagement.Persistence.Configurations;
 
 namespace PersonManagement.Persistence.Context
 {

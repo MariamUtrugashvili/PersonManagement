@@ -1,7 +1,6 @@
 using Swashbuckle.AspNetCore.Filters;
 using PersonManagement.Application.Persons.Commands.UpdatePerson;
 using PersonManagement.Domain.Enums;
-using System.Collections.Generic;
 using PersonManagement.Application.Persons.Common;
 
 namespace PersonManagement.Api.Examples.Requests

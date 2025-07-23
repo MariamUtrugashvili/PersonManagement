@@ -2,10 +2,7 @@ using MediatR;
 using PersonManagement.Application.Caching;
 using PersonManagement.Application.Constants;
 using PersonManagement.Application.Exceptions;
-using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Repositories;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
 {

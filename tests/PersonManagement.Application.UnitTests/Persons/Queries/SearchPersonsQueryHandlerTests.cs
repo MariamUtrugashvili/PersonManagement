@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using PersonManagement.Application.Persons.Queries.SearchPersons;
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
-using Xunit;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace PersonManagement.Application.UnitTests.Persons.Queries
 {

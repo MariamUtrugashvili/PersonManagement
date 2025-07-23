@@ -3,8 +3,6 @@ using PersonManagement.Application.Caching;
 using PersonManagement.Application.Constants;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Repositories;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PersonManagement.Application.Persons.Queries.GetPersonById
 {
