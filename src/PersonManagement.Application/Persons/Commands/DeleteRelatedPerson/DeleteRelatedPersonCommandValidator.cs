@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 
 namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
 {
@@ -7,7 +8,7 @@ namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
         public DeleteRelatedPersonCommandValidator()
         {
             RuleFor(x => x.PersonId)
-                .GreaterThan(0).WithMessage("Invalid person ID.");
+                .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId);
 
             RuleFor(x => x.RelatedToPersonId)
                 .GreaterThan(0)

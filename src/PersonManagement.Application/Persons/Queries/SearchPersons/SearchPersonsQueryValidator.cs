@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 using PersonManagement.Application.Persons.Common;
 
 namespace PersonManagement.Application.Persons.Queries.SearchPersons
@@ -17,21 +18,21 @@ namespace PersonManagement.Application.Persons.Queries.SearchPersons
 
             RuleFor(x => x.FirstName)
             .Length(2, 50)
-            .WithMessage("First name must be between 2 and 50 characters.")
+            .WithMessage(ValidationConstants.FirstNameLength)
             .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
-            .WithMessage("First name must contain only Latin or Georgian letters.")
+            .WithMessage(ValidationConstants.FirstNameLatinOrGeorgian)
             .When(x => !string.IsNullOrWhiteSpace(x.FirstName));
 
             RuleFor(x => x.LastName)
                 .Length(2, 50)
-                .WithMessage("Last name must be between 2 and 50 characters.")
+                .WithMessage(ValidationConstants.LastNameLength)
                 .Must(PersonValidationExtensions.BeOnlyLatinOrGeorgian)
-                .WithMessage("Last name must contain only Latin or Georgian letters.")
+                .WithMessage(ValidationConstants.LastNameLatinOrGeorgian)
                 .When(x => !string.IsNullOrWhiteSpace(x.LastName));
 
             RuleFor(x => x.PersonalNumber)
                 .Matches(@"^\d{11}$")
-                .WithMessage("Personal number must be exactly 11 digits.")
+                .WithMessage(ValidationConstants.PersonalNumberFormat)
                 .When(x => !string.IsNullOrWhiteSpace(x.PersonalNumber));
         }
     }

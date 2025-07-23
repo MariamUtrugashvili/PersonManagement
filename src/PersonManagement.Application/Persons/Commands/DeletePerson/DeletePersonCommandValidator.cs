@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 
 namespace PersonManagement.Application.Persons.Commands.DeletePerson
 {
@@ -8,7 +9,7 @@ namespace PersonManagement.Application.Persons.Commands.DeletePerson
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Person Id must be a positive integer.");
+                .WithMessage(ValidationConstants.InvalidPersonId);
         }
     }
 }

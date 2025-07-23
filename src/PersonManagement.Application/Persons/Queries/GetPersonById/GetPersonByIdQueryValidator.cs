@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 
 namespace PersonManagement.Application.Persons.Queries.GetPersonById
 {
@@ -8,7 +9,7 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
         {
             RuleFor(x => x.Id)
                 .GreaterThan(0)
-                .WithMessage("Invalid person ID.");
+                .WithMessage(ValidationConstants.InvalidPersonId);
         }
     }
 }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 
 namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
 {
@@ -7,10 +8,10 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
         public AddRelatedPersonCommandValidator()
         {
             RuleFor(x => x.PersonId)
-                .GreaterThan(0).WithMessage("Invalid person ID.");
+                .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId);
 
             RuleFor(x => x.RelatedToPersonId)
-                .GreaterThan(0)
+                .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId)
                 .NotEqual(x => x.PersonId).WithMessage("A person cannot be related to themselves");
 
             RuleFor(x => x.RelationType)

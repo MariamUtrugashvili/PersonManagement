@@ -1,4 +1,5 @@
 using FluentValidation;
+using PersonManagement.Application.Constants;
 using PersonManagement.Application.Persons.Common;
 
 namespace PersonManagement.Application.Persons.Commands.UpdatePerson
@@ -8,7 +9,7 @@ namespace PersonManagement.Application.Persons.Commands.UpdatePerson
         public UpdatePersonCommandValidator() : base()
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0).WithMessage("Invalid person ID.");
+                .GreaterThan(0).WithMessage(ValidationConstants.InvalidPersonId);
         }
     }
 }
