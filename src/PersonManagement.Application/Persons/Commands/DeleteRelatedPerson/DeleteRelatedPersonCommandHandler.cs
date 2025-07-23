@@ -2,6 +2,7 @@ using MediatR;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Enums;
 using PersonManagement.Domain.Repositories;
+using PersonManagement.Application.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +11,11 @@ namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
     public class DeleteRelatedPersonCommandHandler : IRequestHandler<DeleteRelatedPersonCommand, Unit>
     {
         private readonly IPersonRepository _personRepository;
-        public DeleteRelatedPersonCommandHandler(IPersonRepository personRepository)
+        private readonly ICacheService _cacheService;
+        public DeleteRelatedPersonCommandHandler(IPersonRepository personRepository, ICacheService cacheService)
         {
             _personRepository = personRepository;
+            _cacheService = cacheService;
         }
 
         public async Task<Unit> Handle(DeleteRelatedPersonCommand request, CancellationToken cancellationToken)
@@ -34,6 +37,8 @@ namespace PersonManagement.Application.Persons.Commands.DeleteRelatedPerson
             person.RemoveRelatedPerson(request.RelatedToPersonId);
 
             await _personRepository.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.RemoveAsync($"person:{request.PersonId}");
 
             return Unit.Value;
         }

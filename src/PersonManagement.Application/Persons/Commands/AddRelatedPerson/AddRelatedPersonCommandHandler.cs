@@ -2,6 +2,7 @@ using MediatR;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Entities;
 using PersonManagement.Domain.Repositories;
+using PersonManagement.Application.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,9 +11,11 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
     public class AddRelatedPersonCommandHandler : IRequestHandler<AddRelatedPersonCommand, Unit>
     {
         private readonly IPersonRepository _personRepository;
-        public AddRelatedPersonCommandHandler(IPersonRepository personRepository)
+        private readonly ICacheService _cacheService;
+        public AddRelatedPersonCommandHandler(IPersonRepository personRepository, ICacheService cacheService)
         {
             _personRepository = personRepository;
+            _cacheService = cacheService;
         }
 
         public async Task<Unit> Handle(AddRelatedPersonCommand request, CancellationToken cancellationToken)
@@ -34,6 +37,8 @@ namespace PersonManagement.Application.Persons.Commands.AddRelatedPerson
             person.AddRelatedPerson(request.RelatedToPersonId, request.RelationType);
 
             await _personRepository.SaveChangesAsync(cancellationToken);
+
+            await _cacheService.RemoveAsync($"person:{request.PersonId}");
 
             return Unit.Value;
         }

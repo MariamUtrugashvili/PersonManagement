@@ -1,13 +1,19 @@
 using MediatR;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Repositories;
+using PersonManagement.Application.Caching;
 
 namespace PersonManagement.Application.Persons.Commands.DeletePerson
 {
-    public class DeletePersonCommandHandler(IPersonRepository personRepository) 
-        : IRequestHandler<DeletePersonCommand, Unit>
+    public class DeletePersonCommandHandler : IRequestHandler<DeletePersonCommand, Unit>
     {
-        private readonly IPersonRepository _personRepository = personRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly ICacheService _cacheService;
+        public DeletePersonCommandHandler(IPersonRepository personRepository, ICacheService cacheService)
+        {
+            _personRepository = personRepository;
+            _cacheService = cacheService;
+        }
 
         public async Task<Unit> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
         {
@@ -25,6 +31,8 @@ namespace PersonManagement.Application.Persons.Commands.DeletePerson
             }
 
             await _personRepository.SaveChangesAsync(cancellationToken);
+   
+            await _cacheService.RemoveAsync($"person:{request.Id}");
 
             return Unit.Value;
         }

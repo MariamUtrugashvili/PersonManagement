@@ -1,6 +1,7 @@
 using MediatR;
 using PersonManagement.Application.Exceptions;
 using PersonManagement.Domain.Repositories;
+using PersonManagement.Application.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,20 +10,27 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
     public class GetPersonByIdQueryHandler : IRequestHandler<GetPersonByIdQuery, GetPersonByIdResponse>
     {
         private readonly IPersonRepository _personRepository;
-        public GetPersonByIdQueryHandler(IPersonRepository personRepository)
+        private readonly ICacheService _cacheService;
+        public GetPersonByIdQueryHandler(IPersonRepository personRepository, ICacheService cacheService)
         {
             _personRepository = personRepository;
+            _cacheService = cacheService;
         }
 
         public async Task<GetPersonByIdResponse> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
         {
+            var cacheKey = $"person:{request.Id}";
+            var cachedResult = await _cacheService.GetAsync<GetPersonByIdResponse>(cacheKey);
+            if (cachedResult != null)
+                return cachedResult;
+
             var person = await _personRepository.GetByIdNoTrackingAsync(
                 id: request.Id,
                 cancellationToken: cancellationToken,
                 includeRelatedPersons: true,
                 includePhoneNumbers: true) ?? throw new PersonNotFoundException(request.Id);
 
-            return new GetPersonByIdResponse
+            var response = new GetPersonByIdResponse
             {
                 Id = person.Id,
                 FirstName = person.FirstName,
@@ -54,8 +62,10 @@ namespace PersonManagement.Application.Persons.Queries.GetPersonById
                                                     PhoneNumberType = pn.PhoneNumberType
                                                 }).ToList()
                             }).ToList()
-
             };
+
+            await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(10));
+            return response;
         }
     }
 }
