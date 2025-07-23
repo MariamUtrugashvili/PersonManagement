@@ -12,7 +12,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__PersonDb=Server=${DB_HOST},${DB_PORT};Database=${DB_NAME};User=${DB_USER};Password=${SA_PASSWORD};TrustServerCertificate=True
-      - Redis__ConnectionString=${REDIS_HOST}:${REDIS_PORT}
+      - ConnectionStrings__Redis=${REDIS_HOST}:${REDIS_PORT}
     depends_on:
       - mssql
       - redis
